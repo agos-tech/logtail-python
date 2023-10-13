@@ -5,11 +5,18 @@ from datetime import datetime
 from os import path
 import __main__
 
+
+JSON_TYPES = (dict, list, bool, int, float, str)
+
+
 def create_frame(record, message, context, include_extra_attributes=False):
     r = record.__dict__
     # Django sends a request object in the record, which is not JSON serializable
-    if "request" in r and not isinstance(r["request"], (dict, list, bool, int, float, str)) :
+    if "request" in r and not isinstance(r["request"], JSON_TYPES):
         del r["request"]
+    # structlog adds the logger object in the record, which is not JSON serializable
+    if "_logger" in r and not isinstance(r["_logger"], JSON_TYPES):
+        del r["_logger"]
     frame = {}
     # Python 3 only solution if we ever drop Python 2.7
     # frame['dt'] = datetime.utcfromtimestamp(r['created']).replace(tzinfo=timezone.utc).isoformat()
