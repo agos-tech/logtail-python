@@ -26,8 +26,10 @@ class LogtailHandler(logging.Handler):
                  drop_extra_events=DEFAULT_DROP_EXTRA_EVENTS,
                  include_extra_attributes=DEFAULT_INCLUDE_EXTRA_ATTRIBUTES,
                  context=DEFAULT_CONTEXT,
-                 level=logging.NOTSET):
+                 level=logging.NOTSET,
+                 formatter=None):
         super(LogtailHandler, self).__init__(level=level)
+        self.formatter = formatter
         self.source_token = source_token
         self.host = host
         self.context = context
